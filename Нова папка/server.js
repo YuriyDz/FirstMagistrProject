@@ -127,14 +127,14 @@ app.post("/userMake", (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));
-console.log("Срака");
+console.log("OK");
 
 /*
 {
   "requestType": 1,
-	"email": "dido",
-	"password": "her",
-	"username": "dido"
+	"email": "nuuu",
+	"password": "ee",
+	"username": "dado"
 }
 
 {

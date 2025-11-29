@@ -1,0 +1,34 @@
+.mainBody {
+    background-color: aqua;
+    border-radius: 1rem;
+    width: auto;
+    height: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.bodyDiv{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.lable{
+    background-color: azure;
+    border: none;
+    width: 100%;
+    
+    height: 1rem;
+    font-size: 1rem;
+margin: 0.5rem; 
+}
+
+.fontSt{
+    font-weight: 900;
+    color: black;
+    font-size: 1rem;
+}
