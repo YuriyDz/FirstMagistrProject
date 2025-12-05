@@ -4,21 +4,23 @@ import reguestsTypes from '../../data/techData.js';
 import '../../conponents/cardTable/cardStyles.css';
 import '../../conponents/loginANDregistr.css';
 import { DynamicIcon } from 'lucide-react/dynamic';
-import { comparator, changeData } from "../functions.js";
+import { comparator, changeData,addDays , getValidData } from "../functions.js";
+import { CardMakeTable } from "./cardMaker.jsx";
 
 export const CardTable = ({ TableData, setTB }) => {
-  console.log(TableData);
+  //console.log(TableData);
   const[selectItem, setSI] = useState(-1);
   const[name,setN] = useState('');
   const[date,setD] = useState('');
   const[type,setT] = useState(false);
- 
+  
+
   const click = (i,n) => {
   const btn = document.getElementById(String(i)+"aa");
   const btn1 = document.getElementById(String(selectItem)+"aa");
-  setD(n.date);
+  setD((n.type === -1?n.date: n.type));
   setN(n.name);
-  setT((n.type === 1? true: false));
+  setT((n.type === -1? true: false));
   if(i===selectItem){
     if (btn1) {
     btn1.classList.remove("active");
@@ -49,17 +51,24 @@ const readyMakingData = () => {
         alert("Заповніть всі поля");
     }
     else{
-    
-    const form = {
+      const now = new Date();
+    const form = (type?
+
+      {
       name: name,
       date: date,
-      type: type,
-    };
-    
+      type: -1,
+    }: {
+      name: name,
+      date: addDays(now.getFullYear()+"-"+getValidData(now.getMonth()+1)+"-"+getValidData(now.getDate()),date),//now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
+      type: date,
+    });
     setTB([TableData[0], changeData(TableData[1],form,'m',selectItem)]);
     //console.log(mainData);
+  }
     }
-}
+
+    
 
 const delItem = () =>{
   setSI(-1);
@@ -71,9 +80,24 @@ const delItem = () =>{
   
 }
 
+const getNumberDaysToTargetData = (dateG) =>{
+    const today = new Date();                // поточна дата пристрою
+  const targetDate = new Date(dateG);      // дата, яку передали у функцію
+
+  
+  const diffMs = targetDate - today;
+
+  
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  
+  return (diffDays<0?"Недійсний":diffDays);
+}
 
   return (
     <div  >
+      <div style={{position: "fixed", zIndex: 15, left: "0%", top: "0%"}}>
+      <CardMakeTable mainData={TableData} setMainData={setTB}></CardMakeTable>
+      </div>
       {TableData === undefined || TableData.length === 0 || TableData === null
         ? null
         : TableData[1].map((n, i) => {
@@ -82,9 +106,11 @@ const delItem = () =>{
             return(
                <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", flexDirection: 'row'}}>
                 <div style={{ position: "relative" , paddingRight: "1rem"}}>
+                  <div style={{textAlign: "left", marginLeft: "0.5rem"}}><t>Назва техогляду</t></div>
                 <div>
               <input className="lable" style={{position: "relative"}} value={name} type="text" onChange={(e)=>setN(e.target.value)} ></input>
               </div>
+              <div style={{textAlign: "left", marginLeft: "0.5rem"}} title="Введіть дату в форматі р-м-д, наприклад 2025-10-09 чи 2016-04-12 чи 2003-07-02"><t>Введіть дату</t></div>
                <div>
               <input className="lable" style={{position: "relative"}} value={date} type={comparator(type,"number","text")} onChange={(e)=>setD(String(e.target.value))} ></input>
                </div>
@@ -108,10 +134,14 @@ const delItem = () =>{
           }
           return(
           
-            <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem"}}>
+            <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", display: "flex", flexDirection: 'row'}}>
+            <div style={{width: '100%'/*calc(100%-3rem)*/, display: "flex", flexDirection: "column"}}>
               <t>{n.name}</t>
-              <t>{n.date}</t>
+              <t>До огляду дн.:{getNumberDaysToTargetData((n.type===-1?n.date: n.date))}</t>
+              </div>
+              <div style={{width: "3rem", position: 'sticky', right: "0%"}}>
               <button className='button' onClick={()=>click(i,n)}><DynamicIcon name='wrench' /></button>  
+              </div>              
             </div>  
           )})}
     </div>

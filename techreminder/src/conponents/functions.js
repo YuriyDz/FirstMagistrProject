@@ -19,3 +19,56 @@ export const changeData = (data, dataNew, type, index) => {
   }
   return dataCopy;
 };
+
+export function addDays(dateString, daysToAdd) {
+  // Розбиваємо вхідну дату
+
+  let [year, month, day] = dateString.split("-").map(Number);
+
+  // Функція перевірки високосного року
+  function isLeap(y) {
+    return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+  }
+
+  // Дні в місяцях (без високосного лютого)
+  const daysInMonthNormal = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  while (daysToAdd > 0) {
+    // Визначаємо кількість днів у поточному місяці
+    let dim = daysInMonthNormal[month - 1];
+
+    // Корекція для лютого високосного року
+    if (month === 2 && isLeap(year)) {
+      dim = 29;
+    }
+
+    // Скільки днів залишилося в цьому місяці
+    let remaining = dim - day;
+
+    if (daysToAdd <= remaining) {
+      // Все вміщується в поточний місяць
+      day += daysToAdd;
+      daysToAdd = 0;
+    } else {
+      // Переходимо в наступний місяць
+      daysToAdd -= remaining + 1;
+      day = 1;
+      month++;
+
+      if (month > 12) {
+        month = 1;
+        year++;
+      }
+    }
+  }
+
+  // Форматуємо назад у YYYY-MM-DD
+  const mm = month < 10 ? "0" + month : month;
+  const dd = day < 10 ? "0" + day : day;
+
+  return `${year}-${mm}-${dd}`;
+}
+
+export const getValidData = (data) => {
+  return String(data).length === 1 ? "0" + data : data;
+};

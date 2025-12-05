@@ -3,7 +3,7 @@ export const newTable = (name) => {
   return (
     "CREATE TABLE `users`.`" +
     name +
-    "` (`name` VARCHAR(100) NOT NULL,`date` DATETIME NULL,`type` INT NULL,PRIMARY KEY (`name`));"
+    "` (`name` VARCHAR(100) NOT NULL,`date` VARCHAR(15) NULL,`type` INT NULL,PRIMARY KEY (`name`));"
   );
 };
 

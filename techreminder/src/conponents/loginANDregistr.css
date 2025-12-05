@@ -8,8 +8,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
+    transition: 0.5s ease;
 }
+
+.mainBody.act{
+    /*top: 120vh;*/
+        
+    transform: translateY(70vh);
+}
+
 
 .bodyDiv{
     display: flex;

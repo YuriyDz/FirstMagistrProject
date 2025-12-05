@@ -32,6 +32,10 @@ function App() {
           <Route path="/Login" element={<Login setData={setUD} />} />
           <Route path="/Register" element={<RegistrComp setData={setUD} />} />
           <Route
+            path="/make"
+            element={<CardMakeTable mainData={userData} setMainData={setUD} />}
+          />
+          <Route
             path="/Table"
             element={<CardTable TableData={userData} setTB={setUD}></CardTable>}
           />
