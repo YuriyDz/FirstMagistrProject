@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { comparator } from "./functions.js";
 import { DynamicIcon } from 'lucide-react/dynamic';
 
-export const RegistrComp = ({setData}) => {
+export const RegistrComp = ({setData, color, colorText}) => {
 const[username, setUN] = useState("");
 const[email,setE] = useState("");
 const[password, setP] = useState("");
@@ -46,23 +46,23 @@ async function registr() {
 
 
     return(
-        <div className="mainBody">
-             <t className='fontSt'>Імя користувача</t>
+        <div className="mainBody" style={{backgroundColor: color}}>
+             <t className='fontSt' style={{color: colorText}}>Імя користувача</t>
              <div className="bodyDiv"> 
                 <input  className="lable" value={username} onChange={(e)=>setUN(e.target.value)}/>
                  </div>
-                     <t className='fontSt'>Електронна пошта</t>
+                     <t className='fontSt' style={{color: colorText}}>Електронна пошта</t>
                  <div className="bodyDiv"> 
             <input   className="lable" value={email} onChange={(e)=>setE(e.target.value)}/>
                 </div>
-                 <t className='fontSt'>Пароль</t>
+                 <t className='fontSt' style={{color: colorText}}>Пароль</t>
              <div className="bodyDiv">     
             <input className="lable"  type={comparator(isVisiblePassword,"password","text")} value={password} onChange={(e)=>setP(e.target.value)}/>
             <button className='button' onClick={()=>setIVP(comparator(isVisiblePassword,true,false))}>
                 <DynamicIcon name={comparator(isVisiblePassword,"eye","eye-off")}  size='1rem'></DynamicIcon>
             </button>
             </div>    
-             <t className='fontSt'>Підтвердити пароль</t>
+             <t className='fontSt' style={{color: colorText}}>Підтвердити пароль</t>
              <div className="bodyDiv"> 
             <input  className="lable" type={comparator(isVisiblePassword,"password","text")} value={passwordConfoirm} onChange={(e)=>setPC(e.target.value)}/>
             </div>

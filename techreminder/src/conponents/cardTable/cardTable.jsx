@@ -6,8 +6,9 @@ import '../../conponents/loginANDregistr.css';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { comparator, changeData,addDays , getValidData } from "../functions.js";
 import { CardMakeTable } from "./cardMaker.jsx";
+import {HeaderInterface } from '../headerInterface/header.jsx';
 
-export const CardTable = ({ TableData, setTB }) => {
+export const CardTable = ({ TableData, setTB, color, setColor,colorText,setCT,daysToDeadline }) => {
   //console.log(TableData);
   const[selectItem, setSI] = useState(-1);
   const[name,setN] = useState('');
@@ -81,13 +82,14 @@ const delItem = () =>{
 }
 
 const getNumberDaysToTargetData = (dateG) =>{
-    const today = new Date();                // поточна дата пристрою
+    const today = new Date();   // поточна дата пристрою
+    
   const targetDate = new Date(dateG);      // дата, яку передали у функцію
 
   
   const diffMs = targetDate - today;
 
-  
+ 
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
   
   return (diffDays<0?"Недійсний":diffDays);
@@ -95,8 +97,9 @@ const getNumberDaysToTargetData = (dateG) =>{
 
   return (
     <div  >
+      <HeaderInterface setColor={setColor} color={color} setTC={setCT}  userData={TableData}></HeaderInterface>
       <div style={{position: "fixed", zIndex: 15, left: "0%", top: "0%"}}>
-      <CardMakeTable mainData={TableData} setMainData={setTB}></CardMakeTable>
+      <CardMakeTable mainData={TableData} setMainData={setTB} color={color} colorText={colorText}></CardMakeTable>
       </div>
       {TableData === undefined || TableData.length === 0 || TableData === null
         ? null
@@ -104,13 +107,13 @@ const getNumberDaysToTargetData = (dateG) =>{
 
           if(i===selectItem){
             return(
-               <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", flexDirection: 'row'}}>
+               <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", flexDirection: 'row', backgroundColor: color}}>
                 <div style={{ position: "relative" , paddingRight: "1rem"}}>
-                  <div style={{textAlign: "left", marginLeft: "0.5rem"}}><t>Назва техогляду</t></div>
+                  <div style={{textAlign: "left", marginLeft: "0.5rem"}}><t style={{color: colorText}}>Назва техогляду</t></div>
                 <div>
               <input className="lable" style={{position: "relative"}} value={name} type="text" onChange={(e)=>setN(e.target.value)} ></input>
               </div>
-              <div style={{textAlign: "left", marginLeft: "0.5rem"}} title="Введіть дату в форматі р-м-д, наприклад 2025-10-09 чи 2016-04-12 чи 2003-07-02"><t>Введіть дату</t></div>
+              <div style={{textAlign: "left", marginLeft: "0.5rem"}} title="Введіть дату в форматі р-м-д, наприклад 2025-10-09 чи 2016-04-12 чи 2003-07-02"><t style={{color: colorText}}>Введіть дату</t></div>
                <div>
               <input className="lable" style={{position: "relative"}} value={date} type={comparator(type,"number","text")} onChange={(e)=>setD(String(e.target.value))} ></input>
                </div>
@@ -134,15 +137,21 @@ const getNumberDaysToTargetData = (dateG) =>{
           }
           return(
           
-            <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", display: "flex", flexDirection: 'row'}}>
+            <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", display: "flex", flexDirection: 'row', backgroundColor: color}}>
+            {getNumberDaysToTargetData(n.date) < daysToDeadline?<div style={{width: '5rem', height: "3rem", background: 'linear-gradient(45deg,red, tomato)', position: "relative", left: "-0.5rem", paddingBottom: "0.5rem", paddingTop: '0.5rem', 
+              borderTopLeftRadius: "0.5rem", borderBottomLeftRadius: "0.5rem", color: "white"}}>
+                  <b style={{fontSize: 35}}>!</b>
+              </div>: null}
             <div style={{width: '100%'/*calc(100%-3rem)*/, display: "flex", flexDirection: "column"}}>
-              <t>{n.name}</t>
-              <t>До огляду дн.:{getNumberDaysToTargetData((n.type===-1?n.date: n.date))}</t>
+              
+              <t style={{color: colorText}}>{n.name}</t>
+              <t style={{color: colorText}}>До огляду дн.:{getNumberDaysToTargetData(n.date)}</t>
               </div>
               <div style={{width: "3rem", position: 'sticky', right: "0%"}}>
               <button className='button' onClick={()=>click(i,n)}><DynamicIcon name='wrench' /></button>  
               </div>              
             </div>  
+            
           )})}
     </div>
   );

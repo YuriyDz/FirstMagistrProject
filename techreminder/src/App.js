@@ -7,7 +7,7 @@ import { CardTable } from "./conponents/cardTable/cardTable";
 import { BrowserRouter, useNavigate, Route, Routes } from "react-router-dom";
 import { CardMakeTable } from "./conponents/cardTable/cardMaker";
 
-function LogOrReg() {
+export function LogOrReg() {
   const navigator = useNavigate();
   return (
     <header style={{ display: "flex" }}>
@@ -23,21 +23,48 @@ function LogOrReg() {
 
 function App() {
   const [userData, setUD] = useState([]);
+  const [color, setColor] = useState("#aabbcc");
+  const [colorText, setCT] = useState("black");
+  const [dayToDeadline, setDTD] = useState(10);
 
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
           <Route path="" element={<LogOrReg />} />
-          <Route path="/Login" element={<Login setData={setUD} />} />
-          <Route path="/Register" element={<RegistrComp setData={setUD} />} />
+          <Route
+            path="/Login"
+            element={
+              <Login setData={setUD} color={color} colorText={colorText} />
+            }
+          />
+          <Route
+            path="/Register"
+            element={
+              <RegistrComp
+                setData={setUD}
+                color={color}
+                colorText={colorText}
+              />
+            }
+          />
           <Route
             path="/make"
             element={<CardMakeTable mainData={userData} setMainData={setUD} />}
           />
           <Route
             path="/Table"
-            element={<CardTable TableData={userData} setTB={setUD}></CardTable>}
+            element={
+              <CardTable
+                color={color}
+                setColor={setColor}
+                TableData={userData}
+                setTB={setUD}
+                colorText={colorText}
+                setCT={setCT}
+                daysToDeadline={dayToDeadline}
+              ></CardTable>
+            }
           />
         </Routes>
       </BrowserRouter>

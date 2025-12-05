@@ -1,0 +1,27 @@
+.bodey{
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    flex-flow: wrap;
+    height: auto;
+    
+    position: fixed;
+    right: 0%;
+    top: 0%;
+}
+
+.colorForm{
+    
+    
+    
+    position:fixed;
+    /* right: calc(50vw - 9rem);
+    bottom: calc(50vh - 9rem);*/
+right: 6rem;
+top: 4rem;
+    
+    transition: 0.5s ease;
+}
+.colorForm.on{
+    top: -16rem;
+}

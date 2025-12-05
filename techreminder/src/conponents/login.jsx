@@ -7,7 +7,7 @@ import '../App.css';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import '../../src/conponents/loginANDregistr.css';
 
-export const Login = ({setData}) => {
+export const Login = ({setData, color, colorText}) => {
 const[username, setUN] = useState("");
 const[password, setP] = useState("");
 const[isVisiblePassword, setIVP] = useState(false);
@@ -40,13 +40,13 @@ async function getData() {
 
 //comparator(isVisiblePassword,"eye","eye-off")
     return(
-        <div className="mainBody">
-            <t className='fontSt'>Імя/Електронна пошта</t>
+        <div className="mainBody" style={{backgroundColor: color}}>
+            <t className='fontSt' style={{color: colorText}}>Імя/Електронна пошта</t>
                 <div className="bodyDiv"> 
         
             <input className="lable" value={username} onChange={(e)=>setUN(e.target.value)}/>
             </div>
-            <t className='fontSt'>Пароль</t>
+            <t className='fontSt' style={{color: colorText}}>Пароль</t>
                 <div className="bodyDiv">     
             <input className="lable"  type={comparator(isVisiblePassword,"password","text")} value={password} onChange={(e)=>setP(e.target.value)}/>
             <button className='button' onClick={()=>setIVP(comparator(isVisiblePassword,true,false))}>

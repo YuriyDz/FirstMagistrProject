@@ -4,7 +4,8 @@ import { DynamicIcon } from 'lucide-react/dynamic';
 import '../../conponents/cardTable/cardStyles.css';
 import '../../conponents/loginANDregistr.css';
 
-export const CardMakeTable = ({mainData,setMainData}) =>{
+
+export const CardMakeTable = ({mainData,setMainData, color, colorText}) =>{
 const[name,setN] = useState("");
 const[data,setD] = useState("");
 const[type,setT] = useState(true);
@@ -55,13 +56,13 @@ const makeData = ()=>{
 return(
     <div className={"fullScreen "+comparator(act, 'disActiveChildren','activeChildren')}>
       
-     <div id={"aa"} className="mainBody activeChildren"    style={{transformOrigin: "50% 50%",margin: "1rem", flexDirection: 'row', position: "fixed"}}>
+     <div id={"aa"} className="mainBody activeChildren"    style={{transformOrigin: "50% 50%",margin: "1rem", flexDirection: 'row', position: "fixed", backgroundColor: color}}>
             <div style={{display: "flex", flexDirection: "column", paddingRight: "1rem"}}>
-             <div style={{textAlign: "left", marginLeft: "0.5rem"}}><t>Назва техогляду</t></div>
+             <div style={{textAlign: "left", marginLeft: "0.5rem"}}><t style={{color: colorText}}>Назва техогляду</t></div>
              <div> 
         <input className="lable" type="text" value={name} onChange={(e) => setN(e.target.value)}></input>
         </div> 
-        <div style={{textAlign: "left", marginLeft: "0.5rem"}} title="Введіть дату в форматі р-м-д, наприклад 2025-10-09 чи 2016-04-12 чи 2003-07-02"><t>Введіть дату</t></div> 
+        <div style={{textAlign: "left", marginLeft: "0.5rem"}} title="Введіть дату в форматі р-м-д, наприклад 2025-10-09 чи 2016-04-12 чи 2003-07-02"><t style={{color: colorText}}>Введіть дату</t></div> 
          <div>
         <input className="lable" type={comparator(type,"number","text")} value={comparator(type,periodly,data)} onChange={(e)=>comparator(type,setP,setD)(e.target.value)}></input>
          </div>

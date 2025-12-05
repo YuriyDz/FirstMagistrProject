@@ -47,7 +47,7 @@ export function addDays(dateString, daysToAdd) {
 
     if (daysToAdd <= remaining) {
       // Все вміщується в поточний місяць
-      day += daysToAdd;
+      day += Number(daysToAdd);
       daysToAdd = 0;
     } else {
       // Переходимо в наступний місяць
@@ -65,10 +65,11 @@ export function addDays(dateString, daysToAdd) {
   // Форматуємо назад у YYYY-MM-DD
   const mm = month < 10 ? "0" + month : month;
   const dd = day < 10 ? "0" + day : day;
-
+  console.log(`${year}-${mm}-${dd}`);
   return `${year}-${mm}-${dd}`;
 }
 
 export const getValidData = (data) => {
   return String(data).length === 1 ? "0" + data : data;
 };
+
