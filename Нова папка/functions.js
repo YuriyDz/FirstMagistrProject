@@ -9,13 +9,48 @@ export const newTable = (name) => {
 
 export const newUser = (email, password, username) => {
   return (
-    "INSERT INTO `users`.`users` (`email`, `password`, `username`) VALUES ('" +
+    "INSERT INTO `users`.`users` (`email`, `password`, `username`, `colorInterface`, `timetodeadline`) VALUES ('" +
     email +
     "', '" +
     password +
     "', '" +
     username +
+    "','" +
+    "#aabbcc" +
+    "','" +
+    "1" +
     "');"
+  );
+};
+
+export const updateUser = (
+  email,
+  password,
+  username,
+  colorInterface,
+  timetodeadline,
+  oldName
+) => {
+  return (
+    "UPDATE `users`.`users` SET " +
+    "`email`='" +
+    email +
+    "', " +
+    "`password`='" +
+    password +
+    "', " +
+    "`username`='" +
+    username +
+    "', " +
+    "`colorInterface`='" +
+    colorInterface +
+    "', " +
+    "`timetodeadline`='" +
+    timetodeadline +
+    "' " +
+    " WHERE `username`='" +
+    oldName +
+    "';"
   );
 };
 
@@ -71,4 +106,8 @@ export const getLoginData = (username, email, password) => {
     password +
     "';"
   );
+};
+
+export const renameTable = (oldName, newName) => {
+  return "RENAME TABLE `" + oldName + "` TO `" + newName + "`;";
 };

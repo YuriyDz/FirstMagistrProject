@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { CardTable } from "./conponents/cardTable/cardTable";
 import { BrowserRouter, useNavigate, Route, Routes } from "react-router-dom";
 import { CardMakeTable } from "./conponents/cardTable/cardMaker";
+import { UserUpdateComp } from "./conponents/userSettings";
 
 export function LogOrReg() {
   const navigator = useNavigate();
@@ -45,6 +46,19 @@ function App() {
                 setData={setUD}
                 color={color}
                 colorText={colorText}
+              />
+            }
+          />
+          <Route
+            path="/User"
+            element={
+              <UserUpdateComp
+                setData={setUD}
+                color={color}
+                colorText={colorText}
+                setDTDD={setDTD}
+                DTDD={dayToDeadline}
+                userData={userData}
               />
             }
           />

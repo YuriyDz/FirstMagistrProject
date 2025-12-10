@@ -2,8 +2,11 @@ import './header.css';
 import { HexColorPicker } from "react-colorful";
 import '../../App.css';
 import { LogOrReg } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 export const HeaderInterface = ({setColor,color, setTC, userData}) => {
+
+    const navigator = useNavigate();
 
 function getTextColor(bgColor) {
   // bgColor у форматі #RRGGBB
@@ -40,7 +43,7 @@ return(
       
       </div>
       <div style={{height: "1rem", marginTop: "0.5rem"}}>
-      <button className='button'>{userData[0][0]['username']}</button>
+      <button className='button' onClick={()=>navigator("/User")}>{userData[0][0]['username']}</button>
       </div>
 </header>
 <div style={{position: "absolute"}}>

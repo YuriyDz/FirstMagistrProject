@@ -111,6 +111,20 @@ app.post("/userMake", (req, res) => {
         funcs.deleteUserByUsername(user.username),
       ];
       break;
+    case 3:
+      functionForGetSQLRequest = [
+        user.username !== user.oldName
+          ? funcs.renameTable(user.oldName, user.username)
+          : "SELECT * FROM USERS LIMIT 1 ",
+        funcs.updateUser(
+          user.email,
+          user.password,
+          user.username,
+          user.colorInterface,
+          user.timetodeadline,
+          user.oldName
+        ),
+      ];
   }
 
   db.query(functionForGetSQLRequest[0], (err, results) => {
@@ -122,6 +136,7 @@ app.post("/userMake", (req, res) => {
         return res.status(500).json({ error: err });
       }
     });
+    console.log(res.json(results));
     return res.json(results);
   });
 });
