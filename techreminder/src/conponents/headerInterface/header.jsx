@@ -3,8 +3,10 @@ import { HexColorPicker } from "react-colorful";
 import '../../App.css';
 import { LogOrReg } from '../../App';
 import { useNavigate } from 'react-router-dom';
+import { DynamicIcon } from 'lucide-react/dynamic';
+import { comparator } from '../functions';
 
-export const HeaderInterface = ({setColor,color, setTC, userData}) => {
+export const HeaderInterface = ({setColor,color, setTC, userData, setVisible, isVisible}) => {
 
     const navigator = useNavigate();
 
@@ -35,7 +37,8 @@ return(
    
 <header className='bodey' style={{backgroundColor: color}}>
 <button className='button' style={{backgroundColor: 'pink', height: "2rem"}} onClick={()=>showColorForm()}>Змінити колір</button>
-     <div style={{height: "2rem"}}>
+<button className='button' style={{backgroundColor: 'deepskyblue', height: "2rem", color: "white"}} title='Показати лише термінові техогляди' onClick={()=>setVisible(comparator(isVisible,true,false))}><DynamicIcon name={isVisible?'eye':'eye-closed'}/>!</button>
+<div style={{height: "2rem"}}>
         <HexColorPicker id="c" className='colorForm'  color={color} onChange={getTextColor} />
      </div>
      <div style={{marginLeft: "auto", marginTop: "0.5rem"}}>

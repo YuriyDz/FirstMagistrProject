@@ -1,21 +1,26 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import axios from "axios";
 import {reguestsTypes } from "../data/techData.js";
 import { useNavigate } from "react-router-dom";
 import { comparator } from "./functions.js";
 import { DynamicIcon } from 'lucide-react/dynamic';
-
+import { LogOrReg } from "../App.js";
 
 
 export const UserUpdateComp = ({setData, color, colorText, setDTDD, DTDD, userData}) => {
-const[username, setUN] = useState(userData[0][0].username);
-const[email,setE] = useState(userData[0][0].email);
-const[password, setP] = useState(userData[0][0].password);
-const[passwordConfoirm, setPC] = useState(userData[0][0].password);
+const navigate = useNavigate();
+   
+    
+const[username, setUN] = useState(userData[0]===undefined? "null":userData[0][0].username);
+const[email,setE] = useState(userData[0]===undefined? "null":userData[0][0].email);
+const[password, setP] = useState(userData[0]===undefined? "null":userData[0][0].password);
+const[passwordConfoirm, setPC] = useState(userData[0]===undefined? "null":userData[0][0].password);
 
 
 const[isVisiblePassword, setIVP] = useState(false);
-const navigate = useNavigate();
+
+
+ 
 
 async function updateData() {
     if(passwordConfoirm !== password){
@@ -47,8 +52,8 @@ async function updateData() {
    // console.log("Успіх:", res.data);
     console.log("Успіх:", userData);
     
-        setData(res.data);
-        alert("Зміни збережено");
+        
+        alert("Зміни збережено" + userData[0][0].username);
     
 
   } catch (err) {
@@ -64,6 +69,10 @@ function outWithAccaunt(){
     setData({});
     navigate('/');
 }
+if(userData[0]===undefined){
+    return <LogOrReg></LogOrReg>
+}
+else{
 
     return(
         <div className="mainBody" style={{backgroundColor: color}}>
@@ -103,4 +112,4 @@ function outWithAccaunt(){
             </div>
         </div>
     );
-}
+}}

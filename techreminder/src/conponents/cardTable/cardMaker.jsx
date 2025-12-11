@@ -5,7 +5,7 @@ import '../../conponents/cardTable/cardStyles.css';
 import '../../conponents/loginANDregistr.css';
 
 
-export const CardMakeTable = ({mainData,setMainData, color, colorText}) =>{
+export const CardMakeTable = ({mainData,setMainData, color, colorText, saveInBDD}) =>{
 const[name,setN] = useState("");
 const[data,setD] = useState("");
 const[type,setT] = useState(true);
@@ -30,7 +30,10 @@ const readyMakingData = () => {
       type: periodly,
     });
     setMainData([mainData[0], changeData(mainData[1],form,'a',-1)]);
-    //console.log(mainData);
+    saveInBDD(1,form);
+    setN("");
+    setD("");
+    setP(0);
   }
     }
 
@@ -73,7 +76,7 @@ return(
         <div style={{display: "flex", flexDirection: "column"}}>
         <button className="button" style={{backgroundColor: "green"}} onClick={()=>readyMakingData()}><DynamicIcon name='check-check' color="white" /></button>
        
-              <button className='button' style={{backgroundColor: "red"}} onClick={()=>cancelMakeData()}><DynamicIcon name='cross' style={{rotate: '45deg'}} color="white" /></button> 
+              <button className='button' style={{backgroundColor: "red"}} onClick={()=>cancelMakeData()}><DynamicIcon name='cross' style={{transform: 'rotate(45deg)'}} color="white" /></button> 
             </div>
     </div>
       <button className="button activeChildren" style={{backgroundColor: "green", position: "fixed", margin: "1rem", color: "white", bottom: "0%", left: "0%", paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "0.5rem", paddingBottom: "0.5rem"}} onClick={()=>makeData()}><DynamicIcon name='cross'  color="white" /></button>

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import {reguestsTypes } from "../data/techData.js";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { comparator } from "./functions.js";
 import '../App.css';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import '../../src/conponents/loginANDregistr.css';
 
-export const Login = ({setData, color, colorText}) => {
+export const Login = ({setData, color, colorText,setTTDL}) => {
 const[username, setUN] = useState("");
 const[password, setP] = useState("");
 const[isVisiblePassword, setIVP] = useState(false);
@@ -24,8 +24,9 @@ async function getData() {
     });
 
     console.log("Успіх:", res.data);
-    
-        setData(res.data);
+    const dat = res.data;
+        setData(dat);
+        setTTDL(dat[0][0].timetodeadline);
         alert("Ви ввійшли в акаунт");
         navigate("/Table");
 

@@ -36,7 +36,7 @@ function App() {
           <Route
             path="/Login"
             element={
-              <Login setData={setUD} color={color} colorText={colorText} />
+              <Login setData={setUD} color={color} colorText={colorText} setTTDL={setDTD} />
             }
           />
           <Route

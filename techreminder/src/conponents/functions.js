@@ -20,6 +20,7 @@ export const changeData = (data, dataNew, type, index) => {
   return dataCopy;
 };
 
+
 export function addDays(dateString, daysToAdd) {
   // Розбиваємо вхідну дату
 
@@ -72,4 +73,3 @@ export function addDays(dateString, daysToAdd) {
 export const getValidData = (data) => {
   return String(data).length === 1 ? "0" + data : data;
 };
-

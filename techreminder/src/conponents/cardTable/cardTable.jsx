@@ -1,21 +1,27 @@
-import { useState } from "react";
+import { useState,useEffect} from "react";
 import axios from "axios";
-import reguestsTypes from '../../data/techData.js';
+import {reguestsTypes} from '../../data/techData.js';
 import '../../conponents/cardTable/cardStyles.css';
 import '../../conponents/loginANDregistr.css';
 import { DynamicIcon } from 'lucide-react/dynamic';
-import { comparator, changeData,addDays , getValidData } from "../functions.js";
+import { comparator, changeData,addDays , getValidData} from "../functions.js";
 import { CardMakeTable } from "./cardMaker.jsx";
 import {HeaderInterface } from '../headerInterface/header.jsx';
 
+import { LogOrReg } from "../../App.js";
+
+let requestsInQuere = [];
+let nameOld = "";
+let first = false;
+
 export const CardTable = ({ TableData, setTB, color, setColor,colorText,setCT,daysToDeadline }) => {
-  //console.log(TableData);
+  
   const[selectItem, setSI] = useState(-1);
   const[name,setN] = useState('');
   const[date,setD] = useState('');
   const[type,setT] = useState(false);
-  
-
+  const[visibleAll, setVA] = useState(true);
+ 
   const click = (i,n) => {
   const btn = document.getElementById(String(i)+"aa");
   const btn1 = document.getElementById(String(selectItem)+"aa");
@@ -41,11 +47,55 @@ else{
   setSI(-1);
 setTimeout(() => {
   setSI(i);
+  nameOld =  n.name;
 }, 500);
   
 }
 
 }
+
+async function saveInBD(type1,form,oldn) {
+  const body = {
+    requestType: type1,
+      tableName: TableData[0][0].username,
+        oldName: oldn,
+        name: form.name,
+      date: form.date,
+      type: form.type,
+  };
+  console.log(body);
+  try{
+  await axios.post(reguestsTypes.UserData, body);
+  }
+  catch(e){
+    requestsInQuere.push(body);
+    const ansv = window.confirm(e);
+    if(ansv){
+      for(let i =0;i<requestsInQuere.length;i++){
+        const bodyy = requestsInQuere.pop();
+        saveInBD(bodyy.requestType,bodyy,oldn);
+      }
+    }
+    
+
+  }
+}
+
+const restartTimer = (formI,index) => {
+
+  
+      const now = new Date();
+    const form =  {
+      name: formI.name,
+      date: addDays(now.getFullYear()+"-"+getValidData(now.getMonth()+1)+"-"+getValidData(now.getDate()),date),//now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
+      type: formI.date,
+    };
+    setTB([TableData[0], changeData(TableData[1],form,'m',index)]);
+    saveInBD(2,form,formI.name);
+    //console.log(mainData);
+  
+    }
+
 
 const readyMakingData = () => {
     if(date === '' || name === ''){
@@ -65,6 +115,7 @@ const readyMakingData = () => {
       type: date,
     });
     setTB([TableData[0], changeData(TableData[1],form,'m',selectItem)]);
+    saveInBD(2,form,nameOld);
     //console.log(mainData);
   }
     }
@@ -78,7 +129,10 @@ const delItem = () =>{
     btn1.classList.remove("active");
   }
   setTB([TableData[0], changeData(TableData[1],{},'d',selectItem)]);
-  
+  saveInBD(3,{
+    tableName: TableData[0][0].username,
+    oldName: TableData[1][selectItem].name,
+  });
 }
 
 const getNumberDaysToTargetData = (dateG) =>{
@@ -92,19 +146,31 @@ const getNumberDaysToTargetData = (dateG) =>{
  
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
   
-  return (diffDays<0?"Недійсний":diffDays);
+  return (diffDays<0?-1:diffDays);
 }
-
+if(TableData[0]===undefined){
+    return <LogOrReg></LogOrReg>
+}
   return (
     <div  >
-      <HeaderInterface setColor={setColor} color={color} setTC={setCT}  userData={TableData}></HeaderInterface>
+      <HeaderInterface setColor={setColor} color={color} setTC={setCT}  userData={TableData} setVisible={setVA} isVisible={visibleAll}></HeaderInterface>
       <div style={{position: "fixed", zIndex: 15, left: "0%", top: "0%"}}>
-      <CardMakeTable mainData={TableData} setMainData={setTB} color={color} colorText={colorText}></CardMakeTable>
+      <CardMakeTable mainData={TableData} setMainData={setTB} color={color} colorText={colorText} saveInBDD={saveInBD}></CardMakeTable>
       </div>
       {TableData === undefined || TableData.length === 0 || TableData === null
         ? null
         : TableData[1].map((n, i) => {
-
+          const ttdl = getNumberDaysToTargetData(n.date);
+          
+          if((ttdl>=daysToDeadline || ttdl === -1)&&visibleAll===false){
+              return null;
+          }
+          if(ttdl===-1 && n.type>-1){
+              restartTimer({
+                name: n.name,
+                date: n.type,
+              },i);
+          }
           if(i===selectItem){
             return(
                <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", flexDirection: 'row', backgroundColor: color}}>
@@ -138,14 +204,14 @@ const getNumberDaysToTargetData = (dateG) =>{
           return(
           
             <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", display: "flex", flexDirection: 'row', backgroundColor: color}}>
-            {getNumberDaysToTargetData(n.date) < daysToDeadline?<div style={{width: '5rem', height: "3rem", background: 'linear-gradient(45deg,red, tomato)', position: "relative", left: "-0.5rem", paddingBottom: "0.5rem", paddingTop: '0.5rem', 
+            {ttdl < daysToDeadline && ttdl >-1 ?<div style={{width: '5rem', height: "3rem", background: 'linear-gradient(45deg,red, tomato)', position: "relative", left: "-0.5rem", paddingBottom: "0.5rem", paddingTop: '0.5rem', 
               borderTopLeftRadius: "0.5rem", borderBottomLeftRadius: "0.5rem", color: "white"}}>
                   <b style={{fontSize: 35}}>!</b>
               </div>: null}
             <div style={{width: '100%'/*calc(100%-3rem)*/, display: "flex", flexDirection: "column"}}>
               
               <t style={{color: colorText}}>{n.name}</t>
-              <t style={{color: colorText}}>До огляду дн.:{getNumberDaysToTargetData(n.date)}</t>
+              <t style={{color: colorText}}>До огляду дн.:{ttdl<0?"Недійсний":ttdl}</t>
               </div>
               <div style={{width: "3rem", position: 'sticky', right: "0%"}}>
               <button className='button' onClick={()=>click(i,n)}><DynamicIcon name='wrench' /></button>  

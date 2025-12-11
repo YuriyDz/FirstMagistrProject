@@ -128,21 +128,23 @@ app.post("/userMake", (req, res) => {
   }
 
   db.query(functionForGetSQLRequest[0], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err });
-    }
-    db.query(functionForGetSQLRequest[1], (err, results1) => {
-      if (err) {
-        return res.status(500).json({ error: err });
+    db.query(functionForGetSQLRequest[1], (err1, results1) => {
+      if (err || err1) {
+        return res.status(500).json({ error: err, error2: err1 });
+      } else {
+        return res.json(results);
       }
     });
-    console.log(res.json(results));
-    return res.json(results);
   });
 });
 
+
+
+
 app.listen(3000, () => console.log("Server running on port 3000"));
 console.log("OK");
+
+
 
 /*
 {

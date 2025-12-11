@@ -111,3 +111,4 @@ export const getLoginData = (username, email, password) => {
 export const renameTable = (oldName, newName) => {
   return "RENAME TABLE `" + oldName + "` TO `" + newName + "`;";
 };
+
