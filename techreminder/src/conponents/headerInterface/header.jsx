@@ -6,7 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { comparator } from '../functions';
 
-export const HeaderInterface = ({setColor,color, setTC, userData, setVisible, isVisible}) => {
+
+
+export const HeaderInterface = ({setColor,color, setTC,colort, userData, setVisible, isVisible, setDTDD, DTDD}) => {
 
     const navigator = useNavigate();
 
@@ -38,9 +40,23 @@ return(
 <header className='bodey' style={{backgroundColor: color}}>
 <button className='button' style={{backgroundColor: 'pink', height: "2rem"}} onClick={()=>showColorForm()}>Змінити колір</button>
 <button className='button' style={{backgroundColor: 'deepskyblue', height: "2rem", color: "white"}} title='Показати лише термінові техогляди' onClick={()=>setVisible(comparator(isVisible,true,false))}><DynamicIcon name={isVisible?'eye':'eye-closed'}/>!</button>
-<div style={{height: "2rem"}}>
+
+<div style={{height: "2rem", width: "0px"}}>
         <HexColorPicker id="c" className='colorForm'  color={color} onChange={getTextColor} />
      </div>
+      <div style={{margin: "0.5rem"}}>
+  <input
+        type="range"
+        min="0"
+        max="365"
+        value={DTDD}
+        onChange={(e) => setDTDD(e.target.value)}
+        style={{ width: "calc(100% - 1rem)", margin: "0.5rem" }}
+      />
+    </div>
+    <div style={{color: colort, marginTop: "0.75rem", fontWeight: 900}}>
+        <t>{"<"+DTDD} Дн до техогляду</t>
+    </div>
      <div style={{marginLeft: "auto", marginTop: "0.5rem"}}>
       <LogOrReg/>
       

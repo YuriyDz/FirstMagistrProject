@@ -77,6 +77,7 @@ function App() {
                 colorText={colorText}
                 setCT={setCT}
                 daysToDeadline={dayToDeadline}
+                setDaysToDeadline={setDTD}
               ></CardTable>
             }
           />

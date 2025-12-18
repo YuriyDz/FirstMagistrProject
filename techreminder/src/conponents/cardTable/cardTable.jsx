@@ -12,9 +12,9 @@ import { LogOrReg } from "../../App.js";
 
 let requestsInQuere = [];
 let nameOld = "";
-let first = false;
 
-export const CardTable = ({ TableData, setTB, color, setColor,colorText,setCT,daysToDeadline }) => {
+
+export const CardTable = ({ TableData, setTB, color, setColor,colorText,setCT,daysToDeadline,setDaysToDeadline }) => {
   
   const[selectItem, setSI] = useState(-1);
   const[name,setN] = useState('');
@@ -81,13 +81,13 @@ async function saveInBD(type1,form,oldn) {
   }
 }
 
-const restartTimer = (formI,index) => {
+const restartTimer = (formI,index,dayFromStart) => {
 
   
-      const now = new Date();
+     // const now = new Date();
     const form =  {
       name: formI.name,
-      date: addDays(now.getFullYear()+"-"+getValidData(now.getMonth()+1)+"-"+getValidData(now.getDate()),date),//now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
+      date: addDays(/*now.getFullYear()+"-"+getValidData(now.getMonth()+1)+"-"+getValidData(now.getDate())*/dayFromStart,date*2),//now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
       type: formI.date,
     };
     setTB([TableData[0], changeData(TableData[1],form,'m',index)]);
@@ -153,7 +153,7 @@ if(TableData[0]===undefined){
 }
   return (
     <div  >
-      <HeaderInterface setColor={setColor} color={color} setTC={setCT}  userData={TableData} setVisible={setVA} isVisible={visibleAll}></HeaderInterface>
+      <HeaderInterface colort={colorText} setColor={setColor} color={color} setTC={setCT}  userData={TableData} setVisible={setVA} isVisible={visibleAll} setDTDD={setDaysToDeadline} DTDD={daysToDeadline}></HeaderInterface>
       <div style={{position: "fixed", zIndex: 15, left: "0%", top: "0%"}}>
       <CardMakeTable mainData={TableData} setMainData={setTB} color={color} colorText={colorText} saveInBDD={saveInBD}></CardMakeTable>
       </div>
@@ -169,7 +169,8 @@ if(TableData[0]===undefined){
               restartTimer({
                 name: n.name,
                 date: n.type,
-              },i);
+              
+              },i, n.date);
           }
           if(i===selectItem){
             return(
@@ -204,9 +205,9 @@ if(TableData[0]===undefined){
           return(
           
             <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", display: "flex", flexDirection: 'row', backgroundColor: color}}>
-            {ttdl < daysToDeadline && ttdl >-1 ?<div style={{width: '5rem', height: "3rem", background: 'linear-gradient(45deg,red, tomato)', position: "relative", left: "-0.5rem", paddingBottom: "0.5rem", paddingTop: '0.5rem', 
+            {ttdl < daysToDeadline  ?<div style={{width: '5rem', height: "3rem", background: ttdl === -1?'linear-gradient(45deg,black, gray)':'linear-gradient(45deg,red, tomato)', position: "relative", left: "-0.5rem", paddingBottom: "0.5rem", paddingTop: '0.5rem', 
               borderTopLeftRadius: "0.5rem", borderBottomLeftRadius: "0.5rem", color: "white"}}>
-                  <b style={{fontSize: 35}}>!</b>
+                  <b style={{fontSize: 35}}>{ttdl === -1?"?":"!"}</b>
               </div>: null}
             <div style={{width: '100%'/*calc(100%-3rem)*/, display: "flex", flexDirection: "column"}}>
               

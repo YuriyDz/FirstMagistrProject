@@ -1,5 +1,4 @@
 export const newTable = (name) => {
-  console.log("pisyun");
   return (
     "CREATE TABLE `users`.`" +
     name +
@@ -111,4 +110,3 @@ export const getLoginData = (username, email, password) => {
 export const renameTable = (oldName, newName) => {
   return "RENAME TABLE `" + oldName + "` TO `" + newName + "`;";
 };
-

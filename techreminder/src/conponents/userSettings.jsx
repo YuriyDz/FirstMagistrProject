@@ -1,4 +1,4 @@
-import { useState ,useEffect} from "react";
+import { useState} from "react";
 import axios from "axios";
 import {reguestsTypes } from "../data/techData.js";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,7 @@ async function updateData() {
     }
     console.log("Чекати:", userData);
     try {
-    const res = await axios.post(reguestsTypes.Registr, {
+    await axios.post(reguestsTypes.Registr, {
     requestType: 3,
     email: email,
     password: password,
