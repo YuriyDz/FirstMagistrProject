@@ -16,4 +16,6 @@ connection.connect((err) => {
   console.log("Підключено до MySQL!");
 });
 
+
+
 module.exports = connection;

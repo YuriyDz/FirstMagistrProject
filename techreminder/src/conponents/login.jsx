@@ -1,13 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import {reguestsTypes } from "../data/techData.js";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { comparator } from "./functions.js";
 import '../App.css';
 import { DynamicIcon } from 'lucide-react/dynamic';
+import { getTextColor } from '../conponents/functions.js';
 import '../../src/conponents/loginANDregistr.css';
 
-export const Login = ({setData, color, colorText,setTTDL}) => {
+export const Login = ({setData, color, colorText,setTTDL,setColor,setCT,setImgPath}) => {
 const[username, setUN] = useState("");
 const[password, setP] = useState("");
 const[isVisiblePassword, setIVP] = useState(false);
@@ -15,7 +16,7 @@ const navigate = useNavigate();
   
 
 async function getData() {
-   
+   let dat = [];
     try {
     const res = await axios.post(reguestsTypes.login, {
       email: username,
@@ -24,8 +25,9 @@ async function getData() {
     });
 
     console.log("Успіх:", res.data);
-    const dat = res.data;
+    dat = res.data;
         setData(dat);
+        
         setTTDL(dat[0][0].timetodeadline);
         alert("Ви ввійшли в акаунт");
         navigate("/Table");
@@ -37,6 +39,9 @@ async function getData() {
     alert("Помилка спробуйте пезніше" + err);
     }  
 }
+    
+        getTextColor(dat[0][0].colorInterface,setColor,setCT);
+        
 }
 
 //comparator(isVisiblePassword,"eye","eye-off")

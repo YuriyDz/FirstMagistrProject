@@ -8,7 +8,7 @@ export const newTable = (name) => {
 
 export const newUser = (email, password, username) => {
   return (
-    "INSERT INTO `users`.`users` (`email`, `password`, `username`, `colorInterface`, `timetodeadline`) VALUES ('" +
+    "INSERT INTO `users`.`users` (`email`, `password`, `username`, `colorInterface`, `timetodeadline`,`timeToSend`) VALUES ('" +
     email +
     "', '" +
     password +
@@ -18,6 +18,8 @@ export const newUser = (email, password, username) => {
     "#aabbcc" +
     "','" +
     "1" +
+    "','" +
+    "08:00" +
     "');"
   );
 };
@@ -28,7 +30,8 @@ export const updateUser = (
   username,
   colorInterface,
   timetodeadline,
-  oldName
+  oldName,
+  time
 ) => {
   return (
     "UPDATE `users`.`users` SET " +
@@ -46,8 +49,11 @@ export const updateUser = (
     "', " +
     "`timetodeadline`='" +
     timetodeadline +
+    "', " +
+    "`timeToSend`='" +
+    time +
     "' " +
-    " WHERE `username`='" +
+    "WHERE `username`='" +
     oldName +
     "';"
   );

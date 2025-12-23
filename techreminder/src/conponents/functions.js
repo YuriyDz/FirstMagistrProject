@@ -73,3 +73,29 @@ export function addDays(dateString, daysToAdd) {
 export const getValidData = (data) => {
   return String(data).length === 1 ? "0" + data : data;
 };
+
+export const getNumberDaysToTargetData = (dateG) =>{
+    const today = new Date();   // поточна дата пристрою
+    
+  const targetDate = new Date(dateG);      // дата, яку передали у функцію
+
+  
+  const diffMs = targetDate - today;
+
+ 
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  
+  return (diffDays<0?-1:diffDays);
+}
+
+export function getTextColor(bgColor,setColor,setTC) {
+  // bgColor у форматі #RRGGBB
+  const r = parseInt(bgColor.substr(1, 2), 16);
+  const g = parseInt(bgColor.substr(3, 2), 16);
+  const b = parseInt(bgColor.substr(5, 2), 16);
+
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  setColor(bgColor); 
+  setTC(brightness > 128 ? "black" : "white");
+}

@@ -5,3 +5,9 @@ export const reguestsTypes = {
   Registr: requestUrl + "/userMake",
   UserData: requestUrl + "/userData/make",
 };
+
+export const dataForBackColor = {
+  white: "gray",
+  gray: "black",
+  black: "white",
+};

@@ -4,7 +4,7 @@ import {reguestsTypes} from '../../data/techData.js';
 import '../../conponents/cardTable/cardStyles.css';
 import '../../conponents/loginANDregistr.css';
 import { DynamicIcon } from 'lucide-react/dynamic';
-import { comparator, changeData,addDays , getValidData} from "../functions.js";
+import { comparator, changeData,addDays , getValidData, getNumberDaysToTargetData} from "../functions.js";
 import { CardMakeTable } from "./cardMaker.jsx";
 import {HeaderInterface } from '../headerInterface/header.jsx';
 
@@ -14,7 +14,7 @@ let requestsInQuere = [];
 let nameOld = "";
 
 
-export const CardTable = ({ TableData, setTB, color, setColor,colorText,setCT,daysToDeadline,setDaysToDeadline }) => {
+export const CardTable = ({ TableData, setTB, color, setColor,colorText,setCT,daysToDeadline,setDaysToDeadline,setBackColor,bc}) => {
   
   const[selectItem, setSI] = useState(-1);
   const[name,setN] = useState('');
@@ -103,17 +103,29 @@ const readyMakingData = () => {
     }
     else{
       const now = new Date();
-    const form = (type?
+    let form;
 
-      {
-      name: name,
-      date: date,
-      type: -1,
-    }: {
-      name: name,
-      date: addDays(now.getFullYear()+"-"+getValidData(now.getMonth()+1)+"-"+getValidData(now.getDate()),date),//now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
-      type: date,
-    });
+if (type) {
+  form = {
+    name: name,
+    date: date,
+    type: -1,
+    dtd: getNumberDaysToTargetData(date),
+  };
+} else {
+  const today =
+    now.getFullYear() + "-" +
+    getValidData(now.getMonth() + 1) + "-" +
+    getValidData(now.getDate());
+  const todayAdd = addDays(today, date);
+  form = {
+    name: name,
+    date: todayAdd,
+    type: date,
+    dtd: getNumberDaysToTargetData(todayAdd),
+  };
+}
+
     setTB([TableData[0], changeData(TableData[1],form,'m',selectItem)]);
     saveInBD(2,form,nameOld);
     //console.log(mainData);
@@ -135,43 +147,32 @@ const delItem = () =>{
   });
 }
 
-const getNumberDaysToTargetData = (dateG) =>{
-    const today = new Date();   // поточна дата пристрою
-    
-  const targetDate = new Date(dateG);      // дата, яку передали у функцію
 
-  
-  const diffMs = targetDate - today;
-
- 
-  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-  
-  return (diffDays<0?-1:diffDays);
-}
 if(TableData[0]===undefined){
     return <LogOrReg></LogOrReg>
 }
   return (
     <div  >
-      <HeaderInterface colort={colorText} setColor={setColor} color={color} setTC={setCT}  userData={TableData} setVisible={setVA} isVisible={visibleAll} setDTDD={setDaysToDeadline} DTDD={daysToDeadline}></HeaderInterface>
+      <HeaderInterface colort={colorText} setColor={setColor} color={color} setTC={setCT}  userData={TableData} setVisible={setVA} isVisible={visibleAll} setDTDD={setDaysToDeadline} DTDD={daysToDeadline} setBC = {setBackColor} bc={bc}></HeaderInterface>
       <div style={{position: "fixed", zIndex: 15, left: "0%", top: "0%"}}>
       <CardMakeTable mainData={TableData} setMainData={setTB} color={color} colorText={colorText} saveInBDD={saveInBD}></CardMakeTable>
       </div>
       {TableData === undefined || TableData.length === 0 || TableData === null
         ? null
         : TableData[1].map((n, i) => {
-          const ttdl = getNumberDaysToTargetData(n.date);
+          const ttdl = n.dtd;//getNumberDaysToTargetData(n.date);
           
           if((ttdl>=daysToDeadline || ttdl === -1)&&visibleAll===false){
               return null;
           }
+          /*
           if(ttdl===-1 && n.type>-1){
               restartTimer({
                 name: n.name,
                 date: n.type,
               
               },i, n.date);
-          }
+          }*/
           if(i===selectItem){
             return(
                <div key={i} id={String(i)+"aa"} className="card"   style={{margin: "1rem", flexDirection: 'row', backgroundColor: color}}>

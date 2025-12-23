@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { comparator,  changeData,addDays,getValidData} from "../functions";
+import { comparator,  changeData,addDays,getValidData,getNumberDaysToTargetData} from "../functions";
 import { DynamicIcon } from 'lucide-react/dynamic';
 import '../../conponents/cardTable/cardStyles.css';
 import '../../conponents/loginANDregistr.css';
@@ -18,17 +18,30 @@ const readyMakingData = () => {
     }
     else{
       const now = new Date();
-    const form = (type?
+  
 
-      {
-      name: name,
-      date: data,
-      type: -1,
-    }: {
-      name: name,
-      date: addDays(now.getFullYear()+"-"+getValidData(now.getMonth()+1)+"-"+getValidData(now.getDate()),periodly),
-      type: periodly,
-    });
+let form;
+
+if (type) {
+  form = {
+    name: name,
+    date: data,
+    type: -1,
+    dtd: getNumberDaysToTargetData(data),
+  };
+} else {
+   const today =
+  now.getFullYear() + "-" +
+  getValidData(now.getMonth() + 1) + "-" +
+  getValidData(now.getDate());
+  const todayAdd = addDays(today, periodly);
+  form = {
+    name: name,
+    date: todayAdd,
+    type: periodly,
+    dtd: getNumberDaysToTargetData(todayAdd),
+  };
+}
     setMainData([mainData[0], changeData(mainData[1],form,'a',-1)]);
     saveInBDD(1,form);
     setN("");

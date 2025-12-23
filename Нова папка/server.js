@@ -1,9 +1,13 @@
 const { use } = require("react");
 const db = require("./db");
 const express = require("express");
-const { error } = require("console");
+const { error, timeEnd } = require("console");
 const app = express();
 const funcs = require("./functions.js");
+const dateFuncs = require("./funnctionsWithDates.js");
+const nodemailer = require("nodemailer");
+const configi = require("./email.js");
+
 const cors = require("cors");
 app.use(cors());
 //import "./functions.js";
@@ -11,7 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/login", (req, res) => {
+  console.log(req.body);
   const user = req.body;
+  console.log(user);
   if (user === undefined) {
     return res.status(300).json({ error: "no data" });
   }
@@ -30,7 +36,9 @@ app.post("/login", (req, res) => {
             if (err1) {
               return res.status(500).json({ error: err1 });
             }
-            return res.status(200).json([results, results1]);
+            return res
+              .status(200)
+              .json([results, dateFuncs.setNewParam(results1)]);
           }
         );
       }
@@ -122,7 +130,8 @@ app.post("/userMake", (req, res) => {
           user.username,
           user.colorInterface,
           user.timetodeadline,
-          user.oldName
+          user.oldName,
+          user.time
         ),
       ];
   }
@@ -138,13 +147,160 @@ app.post("/userMake", (req, res) => {
   });
 });
 
-
-
-
 app.listen(3000, () => console.log("Server running on port 3000"));
 console.log("OK");
 
+const pohibka = 10;
 
+const chastota = 10 * 1000;
+
+measseges();
+
+function sentEmail(email, user, data) {
+  const transporter = nodemailer.createTransport(configi);
+  const htmlContent = `
+    <h1>Вітаю ${user}</h1>
+    ${data.map((n) => `<b>${n}</b><br>`).join("")}
+  `;
+  const emailOptions = {
+    from: "yuriytechserver@meta.ua",
+    to: email,
+    subject: "Nodemailer test",
+    text: htmlContent,
+  };
+
+  transporter
+    .sendMail(emailOptions)
+    .then((info) => console.log(info))
+    .catch((err) => console.log(err));
+}
+
+async function measseges() {
+  const nowi = new Date();
+  const now = nowi.getHours() + ":" + nowi.getMinutes();
+  const today =
+    nowi.getFullYear() +
+    "-" +
+    dateFuncs.getValidData(nowi.getMonth() + 1) +
+    "-" +
+    dateFuncs.getValidData(nowi.getDate());
+
+  //get all users
+  let arrWithUsersName = [];
+
+  await new Promise((resolve, reject) => {
+    db.query("SELECT username FROM users.users;", (err, res) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(res.map((r) => r.username));
+    });
+  })
+    .then((users) => {
+      arrWithUsersName = users;
+    })
+    .catch((err) => console.error(err));
+
+  //iterate all users
+  for (let i of arrWithUsersName) {
+    let allDataFromUser = [];
+    //get all data from user
+
+    await new Promise((resolve, reject) => {
+      db.query(
+        "SELECT * FROM users.users WHERE username ='" + i + "';",
+        (err, res) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve(res);
+        }
+      );
+    })
+      .then((users) => {
+        allDataFromUser = users;
+      })
+      .catch((err) => console.error(err));
+
+    const timeToSend = allDataFromUser[0].timeToSend;
+
+    //is now send email
+
+    if (
+      dateFuncs.getMinutesSub(
+        now,
+        timeToSend === undefined || timeToSend === null ? "00:00" : timeToSend,
+        pohibka
+      ) &&
+      allDataFromUser[0].dateSendZvit !== today
+    ) {
+      let userTechData = [];
+      let zvit = [];
+
+      await new Promise((resolve, reject) => {
+        db.query("SELECT * FROM users." + i + ";", (err, res) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve(res);
+        });
+      })
+        .then((users) => {
+          userTechData = users;
+        })
+        .catch((err) => (userTechData = -1));
+      if (userTechData === -1) {
+        continue;
+      }
+      //iterate all techremind
+      for (let j of userTechData) {
+        //Check is today deadline
+        if (dateFuncs.getNumberDaysToTargetData(j.date) === 0) {
+          //restarttimer
+          console.log("eeee");
+          if (j.type >= 0) {
+            db.query(
+              "UPDATE `users`.`" +
+                i +
+                "` SET `date` = '" +
+                dateFuncs.addDays(j.date, j.type) +
+                "' WHERE (`name` = '" +
+                j.name +
+                "');"
+            );
+          }
+          zvit.push(
+            "Ви повинні відвідати, або ви забули відвідати: " +
+              j.name +
+              " в: " +
+              j.date
+          );
+          //endRestartTimer
+        }
+        //end check today deadline
+      }
+      if (zvit.length > 0) {
+        console.log("це звіт:" + zvit);
+        sentEmail(allDataFromUser[0].email, i, zvit);
+      }
+      db.query(
+        "UPDATE `users`.`users` SET `dateSendZvit` = '" +
+          today +
+          "' WHERE (`username` = '" +
+          i +
+          "');"
+      );
+    }
+  }
+  console.log("Я відпрацював");
+  setTimeout(measseges, chastota);
+}
 
 /*
 {

@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { comparator } from "./functions.js";
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { LogOrReg } from "../App.js";
+import { TimePicker } from 'antd';
 
-
-export const UserUpdateComp = ({setData, color, colorText, setDTDD, DTDD, userData}) => {
+export const UserUpdateComp = ({setData, color, colorText, setDTDD, DTDD, userData,img}) => {
 const navigate = useNavigate();
    
     
@@ -18,9 +18,8 @@ const[passwordConfoirm, setPC] = useState(userData[0]===undefined? "null":userDa
 
 
 const[isVisiblePassword, setIVP] = useState(false);
+const[time,setTime] = useState(userData[0]===undefined? "null":userData[0][0].timeToSend);
 
-
- 
 
 async function updateData() {
     if(passwordConfoirm !== password){
@@ -30,15 +29,17 @@ async function updateData() {
         return false;
     }
     console.log("Чекати:", userData);
+    
     try {
     await axios.post(reguestsTypes.Registr, {
     requestType: 3,
     email: email,
     password: password,
     username: username,
-    colorInterface: color,
+    colorInterface: color+" "+img,
     timetodeadline: DTDD,
     oldName: userData[0][0].username,
+    time: time.format('HH:mm'),// Tue, 23 Dec 2025 03:08:00 GMT
     });
     setData([[{
         email: email,
@@ -95,7 +96,11 @@ else{
              <div className="bodyDiv"> 
             <input  className="lable" type={comparator(isVisiblePassword,"password","text")} value={passwordConfoirm} onChange={(e)=>setPC(e.target.value)}/>
             </div>
-            <b styles={{color: color}}>{DTDD} Днів до дедлайна</b>
+            <div style={{margin: "0.5rem"}}>
+            <TimePicker onChange={(value) => setTime(value)} value={time} format="HH:mm" />
+            </div>
+            <b style={{color: colorText}}>{DTDD} Днів до дедлайна</b>
+
             <input
         type="range"
         min="0"

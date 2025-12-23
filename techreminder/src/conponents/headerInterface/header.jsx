@@ -5,24 +5,14 @@ import { LogOrReg } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { comparator } from '../functions';
+import {getTextColor} from '../functions.js';
+import {dataForBackColor} from '../../data/techData.js';
 
-
-
-export const HeaderInterface = ({setColor,color, setTC,colort, userData, setVisible, isVisible, setDTDD, DTDD}) => {
+export const HeaderInterface = ({setColor,color, setTC,colort, userData, setVisible, isVisible, setDTDD, DTDD,setBC,bc}) => {
 
     const navigator = useNavigate();
 
-function getTextColor(bgColor) {
-  // bgColor у форматі #RRGGBB
-  const r = parseInt(bgColor.substr(1, 2), 16);
-  const g = parseInt(bgColor.substr(3, 2), 16);
-  const b = parseInt(bgColor.substr(5, 2), 16);
 
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-  setColor(bgColor); 
-  setTC(brightness > 128 ? "black" : "white");
-}
 
 const showColorForm = () =>{
     
@@ -42,7 +32,7 @@ return(
 <button className='button' style={{backgroundColor: 'deepskyblue', height: "2rem", color: "white"}} title='Показати лише термінові техогляди' onClick={()=>setVisible(comparator(isVisible,true,false))}><DynamicIcon name={isVisible?'eye':'eye-closed'}/>!</button>
 
 <div style={{height: "2rem", width: "0px"}}>
-        <HexColorPicker id="c" className='colorForm'  color={color} onChange={getTextColor} />
+        <HexColorPicker id="c" className='colorForm'  color={color} onChange={(e)=>getTextColor(e,setColor,setTC)} />
      </div>
       <div style={{margin: "0.5rem"}}>
   <input
@@ -55,8 +45,9 @@ return(
       />
     </div>
     <div style={{color: colort, marginTop: "0.75rem", fontWeight: 900}}>
-        <t>{"<"+DTDD} Дн до техогляду</t>
+        <t>{">"+DTDD} Дн до техогляду</t>
     </div>
+    <button className='button' style={{backgroundColor: "yellow"}} onClick={()=>setBC(dataForBackColor[bc])}><DynamicIcon name='sun-moon' color='black'/></button>
      <div style={{marginLeft: "auto", marginTop: "0.5rem"}}>
       <LogOrReg/>
       

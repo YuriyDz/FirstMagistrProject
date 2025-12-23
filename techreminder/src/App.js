@@ -27,16 +27,28 @@ function App() {
   const [color, setColor] = useState("#aabbcc");
   const [colorText, setCT] = useState("black");
   const [dayToDeadline, setDTD] = useState(10);
-
+  const [backColor,setBC]=useState('gray');
+  
   return (
-    <div className="App">
+    <div
+      className="App"
+     style={{backgroundColor: backColor}}
+    >
       <BrowserRouter>
         <Routes>
           <Route path="" element={<LogOrReg />} />
           <Route
             path="/Login"
             element={
-              <Login setData={setUD} color={color} colorText={colorText} setTTDL={setDTD} />
+              <Login
+                setData={setUD}
+                color={color}
+                colorText={colorText}
+                setTTDL={setDTD}
+                setColor={setColor}
+                setCT={setCT}
+               
+              />
             }
           />
           <Route
@@ -59,6 +71,7 @@ function App() {
                 setDTDD={setDTD}
                 DTDD={dayToDeadline}
                 userData={userData}
+                
               />
             }
           />
@@ -78,6 +91,8 @@ function App() {
                 setCT={setCT}
                 daysToDeadline={dayToDeadline}
                 setDaysToDeadline={setDTD}
+                setBackColor = {setBC}
+                bc = {backColor}
               ></CardTable>
             }
           />
